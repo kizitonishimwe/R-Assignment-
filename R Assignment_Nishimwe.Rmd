@@ -1,0 +1,305 @@
+---
+title: "R Assignment
+Author: Nishimwe 
+Date: October 17, 2018 
+output: html_document
+---
+
+Access to Files: 
+
+
+```{r echo=TRUE}
+fang_et_al_genotypes <- read.csv("./fang_et_al_genotypes.txt",sep = "\t",header = T)
+snp_position <- read.csv("./snp_position.txt", sep = "\t", header = T)
+```
+
+***********Part I**************
+
+1. Data Inspection 
+
+
+```{r}
+head(fang_et_al_genotypes, n=10)  # print the first 5 rows 
+head(snp_position, n=10)
+
+dim(fang_et_al_genotypes) # print number of columns and number of rows 
+dim(snp_position)
+
+str(fang_et_al_genotypes) # check the data structure 
+str(snp_position)
+
+class(fang_et_al_genotypes) # Check the type of data
+class(snp_position)
+
+levels(fang_et_al_genotypes) # levels of group
+levels(snp_position)
+
+print(object.size(fang_et_al_genotypes), units = "Mb") # Size of files
+print(object.size(snp_position), units = "Mb")
+```
+
+2. Data Processing 
+
+#Group and transpose the data 
+
+#Maize
+Group = ZMMIL, ZMMLR, ZMMMR
+
+```{r}
+library(magrittr)
+maize_grps <- c("ZMMIL", "ZMMLR", "ZMMMR")
+maize_gen <- fang_et_al_genotypes[fang_et_al_genotypes$Group %in% maize_grps,] %>% t() %>%  as.data.frame()
+maize_gen <- maize_gen[-c(1,2,3),]
+print(maize_gen)
+dim(maize_gen)
+```
+
+#Teosinite
+Group = ZMPBA, ZMPIL, and ZMPJA
+
+```{r}
+library(magrittr)
+teosinite_grps <- c("ZMPBA", "ZMPIL", "ZMPJA")
+teosinite_gen <- fang_et_al_genotypes[fang_et_al_genotypes$Group %in% teosinite_grps,] %>% t() %>% as.data.frame()
+teosinite_gen <- teosinite_gen[-c(1,2,3),]
+print(teosinite_gen)
+dim(teosinite_gen)
+```
+
+
+#SNP Position 
+
+SNP_ID`,`Chromosome`,`Position`)
+
+```{r}
+install.packages("rlang")
+library(dplyr)
+snp_posit <- select (snp_position, 'SNP_ID', 'Chromosome', 'Position')
+print(snp_posit)
+```
+
+
+#Merging genotype with SNPs
+
+#Maize 
+```{r}
+maize_merged <- merge(snp_posit, maize_gen, by.x = "SNP_ID", by.y ="row.names", all=TRUE)
+print(maize_merged)
+```
+
+#Teosinite 
+```{r}
+teosinite_merged <- merge(snp_posit, teosinite_gen, by.x = "SNP_ID", by.y = "row.names", all=TRUE)
+print(teosinite_merged)
+```
+#Files for maize based on increasing position values and with missinf data encoded by thie ? sympol
+
+#Chromosome 1 
+```{r}
+chrom_1 <- filter(maize_merged, Chromosome == "1")
+chrom_1_incr <- chrom_1[order(as.integer(chrom_1$Position),decreasing = FALSE),]
+print(chrom_1_incr)
+```
+#Chromosome 2 
+```{r}
+chrom_2 <- filter(maize_merged, Chromosome == "2")
+chrom_2_incr <- chrom_2[order(as.integer(chrom_2$Position),decreasing = FALSE),]
+print(chrom_2_incr)
+```
+#chromosome 3 
+```{r}
+chrom_3 <- filter(maize_merged, Chromosome == "3")
+chrom_3_incr <- chrom_3[order(as.integer(chrom_3$Position),decreasing = FALSE),]
+print(chrom_3_incr)
+```
+#Chromosome 4
+
+```{r}
+chrom_4 <- filter(maize_merged, Chromosome == "4")
+chrom_4_incr <- chrom_4[order(as.integer(chrom_4$Position),decreasing = FALSE),]
+print(chrom_4_incr)
+```
+#Chromosome 5 
+```{r}
+chrom_5 <- filter(maize_merged, Chromosome == "5")
+chrom_5_incr <- chrom_5[order(as.integer(chrom_5$Position),decreasing = FALSE),]
+print(chrom_5_incr)
+```
+#Chromosome 6 
+```{r}
+chrom_6 <- filter(maize_merged, Chromosome == "6")
+chrom_6_incr <- chrom_6[order(as.integer(chrom_6$Position),decreasing = FALSE),]
+print(chrom_5_incr)
+```
+#Chromosome 7 
+```{r}
+chrom_7 <- filter(maize_merged, Chromosome == "7")
+chrom_7_incr <- chrom_7[order(as.integer(chrom_7$Position),decreasing = FALSE),]
+print(chrom_7_incr)
+```
+#Chromosome 8 
+```{r}
+chrom_8 <- filter(maize_merged, Chromosome == "8")
+chrom_8_incr <- chrom_8[order(as.integer(chrom_8$Position),decreasing = FALSE),]
+print(chrom_8_incr)
+```
+#Chrmosome 9 
+```{r}
+chrom_9 <- filter(maize_merged, Chromosome == "9")
+chrom_9_incr <- chrom_9[order(as.integer(chrom_9$Position),decreasing = FALSE),]
+print(chrom_9_incr)
+```
+#Chromosome 10
+```{r}
+chrom_10 <- filter(maize_merged, Chromosome == "10")
+chrom_10_incr <- chrom_10[order(as.integer(chrom_10$Position),decreasing = FALSE),]
+print(chrom_10_incr)
+```
+#Files for Teosinite based on increasing position values and with missing data encoded by the ? symbol
+
+#Chromosome 1 
+```{r}
+chrom_1 <- filter(teosinite_merged, Chromosome == "1")
+chrom_1_incr <- chrom_1[order(as.integer(chrom_1$Position),decreasing = FALSE),]
+print(chrom_1_incr)
+```
+#Chromosome 2
+```{r}
+chrom_2 <- filter(teosinite_merged, Chromosome == "2")
+chrom_2_incr <- chrom_2[order(as.integer(chrom_2$Position),decreasing = FALSE),]
+print(chrom_2_incr)
+```
+#Chromosome 3
+```{r}
+chrom_3 <- filter(teosinite_merged, Chromosome == "3")
+chrom_3_incr <- chrom_3[order(as.integer(chrom_3$Position),decreasing = FALSE),]
+print(chrom_3_incr)
+```
+#Chromosome 4 
+```{r}
+chrom_4 <- filter(teosinite_merged, Chromosome == "4")
+chrom_4_incr <- chrom_4[order(as.integer(chrom_4$Position),decreasing = FALSE),]
+print(chrom_4_incr)
+```
+#Chromosome 5
+```{r}
+chrom_5 <- filter(teosinite_merged, Chromosome == "5")
+chrom_5_incr <- chrom_5[order(as.integer(chrom_5$Position),decreasing = FALSE),]
+print(chrom_5_incr)
+```
+#Chromosome 6 
+```{r}
+chrom_6 <- filter(teosinite_merged, Chromosome == "6")
+chrom_6_incr <- chrom_6[order(as.integer(chrom_6$Position),decreasing = FALSE),]
+print(chrom_6_incr)
+```
+#Chromosome 7
+```{r}
+chrom_7 <- filter(teosinite_merged, Chromosome == "7")
+chrom_7_incr <- chrom_7[order(as.integer(chrom_7$Position),decreasing = FALSE),]
+print(chrom_7_incr)
+```
+#Chromosome 8 
+```{r}
+chrom_8 <- filter(teosinite_merged, Chromosome == "8")
+chrom_8_incr <- chrom_8[order(as.integer(chrom_8$Position),decreasing = FALSE),]
+print(chrom_8_incr)
+```
+#Chromosome 9 
+```{r}
+chrom_9 <- filter(teosinite_merged, Chromosome == "9")
+chrom_9_incr <- chrom_9[order(as.integer(chrom_8$Position),decreasing = FALSE),]
+print(chrom_9_incr)
+```
+#Chromosome 10
+```{r}
+chrom_10 <- filter(teosinite_merged, Chromosome == "10")
+chrom_10_incr <- chrom_10[order(as.integer(chrom_10$Position),decreasing = FALSE),]
+print(chrom_10_incr)
+```
+
+#Maize file based on decreasing position values and with missing data encoded by the - symbol: 
+
+```{r}
+maize_merged <- gsub("?", "-", maize_merged)
+print(maize_merged)
+```
+
+******Part 2******
+
+data_joined$Chromosome<-factor(data_joined$Chromosome, levels = c("1","2","3","4","5","6","7","8","9","10","unknown","multiple"))
+
+ggplot(data_joined)+ geom_bar(aes(data_joined$Chromosome))+xlab("Chromosome") +ylab("total number of SNPs")
+
+
+
+#Transpose the original data 
+```{r}
+library(reshape2)
+library(ggplot2)
+fang_et_al_genotypes_transp <- as.data.frame(t(fang_et_al_genotypes))
+dim(fang_et_al_genotypes_transp)
+```
+
+# Join the transposed data with SNPs data 
+```{r}
+Joined_data <- merge(snp_posit, fang_et_al_genotypes_transp, by.x = "SNP_ID", by.y = "row.names", all = TRUE)
+print(Joined_data)
+```
+
+#Visualization 
+```{r}
+Joined_data$Chromosome <- factor(Joined_data$Chromosome, levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9","10", "unknown", "multiple"))
+library(ggplot2)
+ggplot(Joined_data)+geom_bar(aes(Joined_data$Chromosome))+xlab("Chromosome")+ylab("Total number of SNPs")
+```
+# SNPs grouping
+
+```{r}
+ggplot(fang_et_al_genotypes)+geom_bar(aes(fang_et_al_genotypes$Group))+xlab("SNP Group")+ylab("total SNPs") #ZMML, ZMMLR and ZMPA are the most abondant SNPs. 
+```
+
+
+#Missing Data and amount of heterozygosity 
+
+```{r}
+library(reshape2)
+library(plyr)
+New_data <- colnames(fang_et_al_genotypes)[-c(1:3)]
+New_data_melted <- melt(fang_et_al_genotypes, measure.vars = New_data)
+New_data_melted [New_data_melted =="?/?"]=NA
+New_data_melted <- arrange(New_data_melted,Group,Sample_ID)
+New_data_melted$Homozygotes_Heterozygotes <- (New_data_melted$value=="A/A"|New_data_melted$value=="C/C"|New_data_melted$value=="G/G"|New_data_melted$value=="T/T")
+print(New_data_melted)
+```
+ 
+#Grouping Homozygotes and Heterozygotes
+
+```{r}
+library(plyr)
+Indiv <- ddply(New_data_melted,c("Sample_ID"),summarize, total_homozygous=sum(Homozygotes_Heterozygotes,na.rm = TRUE),total_heterozygous=sum(!Homozygotes_Heterozygotes,na.rm = TRUE), total_NA=sum(is.na(Homozygotes_Heterozygotes)))
+Indiv_melted <- melt(Indiv,measure.vars = c("total_homozygous","total_heterozygous","total_NA"))
+ggplot(Indiv_melted,aes(x=Sample_ID,y=value,fill=variable))+geom_bar(stat = "identity",position = "stack")
+```
+```{r}
+library(plyr)
+Group <- ddply(New_data_melted,c("Group"),summarise,total_homozygous=sum(Homozygotes_Heterozygotes,na.rm = TRUE),total_heterozygous=sum(!Homozygotes_Heterozygotes,na.rm = TRUE),total_NA=sum(is.na(Homozygotes_Heterozygotes)))
+Group_melted <- melt(Group,measure.vars = c("total_homozygous","total_heterozygous","total_NA"))
+ggplot(Group_melted,aes(x=Group,y=value,fill=variable))+geom_bar(stat ="identity",position = "stack")
+
+```
+Group = ZMMIL, ZMMLR, ZMMMR
+
+#Visualization: Mapping SNPs vs Homozygous and Heterozygous
+```{r}
+library(plyr)
+maize_merged[maize_merged[]=="?/?"] =NA
+maize_merged_melt <- melt(maize_merged,id=c("SNP_ID","Chromosome"))
+print(maize_merged_melt)
+maize_merged_melt$status <- (maize_merged_melt$value=="A/A"|maize_merged_melt$value=="C/C"|maize_merged_melt$value=="G/G"|maize_merged_melt=="T/T")
+maize_map_count <- ddply(maize_map_melt,c("SNP_ID"),summarise, total_homozygous=sum(status,na.rm = TRUE),total_heterozygous=sum(!status,na.rm = TRUE), total_NA=sum(is.na(status)))
+maize_map_count_melt <- melt(maize_map_count,measure.vars = c("total_homozygous","total_heterozygous","total_NA"))
+ggplot(maize_map_count_melt,aes(x=SNP_ID,y=value,fill=variable))+geom_bar(stat = "identity", position = "stack")
+```
+
+
